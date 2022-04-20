@@ -3,15 +3,14 @@ import { Grid, Text, Button } from "../elements";
 
 import { useSelector, useDispatch } from "react-redux";
 import { actionCreators as userActions } from "../redux/modules/user";
-import { useHistory } from "react-router-dom";
 
-//history 작동안함
-// import { history } from "../redux/configureStore";
+import { history } from "../redux/configureStore";
 
 const Header = (props) => {
   const dispatch = useDispatch();
-  //useHistory 사용해서 해결
-  const myHistory = useHistory();
+  React.useEffect(() => {
+    dispatch(userActions.loginCheckAxios());
+  }, []);
 
   const is_login = useSelector((state) => state.user.is_login);
 
@@ -34,7 +33,12 @@ const Header = (props) => {
                 // history.push("/noti");
               }}
             />
-            <Button text="로그아웃" _onClick={() => {}}></Button>
+            <Button
+              text="로그아웃"
+              _onClick={() => {
+                dispatch(userActions.logoutAxios());
+              }}
+            ></Button>
           </Grid>
         </Grid>
       </React.Fragment>
@@ -54,13 +58,13 @@ const Header = (props) => {
           <Button
             text="로그인"
             _onClick={() => {
-              myHistory.push("/login");
+              history.push("/login");
             }}
           ></Button>
           <Button
             text="회원가입"
             _onClick={() => {
-              myHistory.push("/signup");
+              history.push("/signup");
             }}
           ></Button>
         </Grid>
