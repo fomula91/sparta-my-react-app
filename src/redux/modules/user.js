@@ -56,26 +56,36 @@ const loginCheckAxios = () => {
   return function (dispatch, getState, { history }) {
     console.log("hello loginCheckAxios");
     const mycookie = getCookie("is_login");
-    axios({
-      method: "post",
-      url: "https://e28bcc4e-a83a-4009-8ade-8e539c86f78a.mock.pstmn.io/api/user/check",
-      headers: {
-        JWTtoken: mycookie,
-      },
-    })
-      .then((res) => {
-        console.log("로그인 체크 성공!");
-        const user_info = {
-          id: res.data.id,
-          uid: res.data.uid,
-          user_name: res.data.user_name,
-          profile_src: res.data.user_profile_src,
-        };
-        dispatch(setUser(user_info));
+    let is_login = false;
+    if (mycookie === undefined) {
+    } else {
+      is_login = true;
+    }
+    if (is_login) {
+      axios({
+        method: "post",
+        url: "https://e28bcc4e-a83a-4009-8ade-8e539c86f78a.mock.pstmn.io/api/user/check",
+        headers: {
+          JWTtoken: mycookie,
+        },
       })
-      .catch((error) => {
-        console.log(error.code, error.message);
-      });
+        .then((res) => {
+          console.log("로그인 체크 성공!");
+          const user_info = {
+            id: res.data.id,
+            uid: res.data.uid,
+            user_name: res.data.user_name,
+            profile_src: res.data.profile_image_src,
+          };
+
+          dispatch(setUser(user_info));
+        })
+        .catch((error) => {
+          console.log(error.code, error.message);
+        });
+    } else {
+      console.log("is login else!");
+    }
   };
 };
 const logoutAxios = () => {

@@ -4,8 +4,9 @@ import { ConnectedRouter } from "connected-react-router";
 import { history } from "./redux/configureStore";
 import PostList from "./pages/PostList";
 import Header from "./components/Header";
-import { Login } from "./pages/index";
-
+import { Login, PostWrite } from "./pages/index";
+import Permit from "./main/Permit";
+import { Button } from "./elements/index";
 function App() {
   return (
     <>
@@ -13,6 +14,16 @@ function App() {
         <Header></Header>
         <Route path="/" exact component={PostList} />
         <Route path="/login" component={Login} />
+        <Route path="/write" component={PostWrite} />
+        <Permit>
+          <Button
+            is_float
+            text="+"
+            _onClick={() => {
+              history.push("/write");
+            }}
+          ></Button>
+        </Permit>
       </ConnectedRouter>
     </>
   );

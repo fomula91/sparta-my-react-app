@@ -13,7 +13,7 @@ const PostList = (props) => {
   const { history } = props;
 
   React.useEffect(() => {
-    dispatch(postActions.getAxios());
+    dispatch(postActions.getPostAxios());
   }, []);
 
   return (
