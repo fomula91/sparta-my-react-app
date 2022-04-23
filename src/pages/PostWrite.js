@@ -3,19 +3,21 @@ import { Grid, Text, Button, Image, Input } from "../elements";
 import Upload from "../main/Upload";
 // import Upload from "../shared/Upload";
 
+import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { actionCreators as postActions } from "../redux/modules/post";
 import { actionCreators as imageActions } from "../redux/modules/image";
 
 const PostWrite = (props) => {
   const dispatch = useDispatch();
+  const postid = useParams();
+  console.log(postid);
   const is_login = useSelector((state) => state.user.is_login);
-
   const preview = useSelector((state) => state.image.preview);
   const post_list = useSelector((state) => state.post.list);
 
   const post_id = props.match.params.id;
-  //console.log(props.match.params.id);
+  console.log("postwrite props", props);
   const is_edit = post_id ? true : false;
 
   const { history } = props;
@@ -70,7 +72,7 @@ const PostWrite = (props) => {
     <React.Fragment>
       <Grid padding="16px">
         <Text margin="0px" size="36px" bold>
-          {/* {is_edit ? "게시글 수정" : "게시글 작성"} */}
+          {is_edit ? "게시글 수정" : "게시글 작성"}
         </Text>
         <Upload />
       </Grid>

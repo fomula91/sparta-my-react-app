@@ -20,31 +20,77 @@ const initialState = {
   user: null,
   is_login: false,
 };
+const BASE_API = process.env.REACT_APP_API_BASE_URL;
 
 // middleware actions
-const loginAxios = (id, pwd) => {
+const signupAxios = (id, pwd, pwd_check, user_name) => {
   return function (dispatch, getState, { history }) {
-    console.log("hello loginAxios");
+    console.log("hello signupAxios!!!");
+
     axios({
       method: "post",
-      url: "https://e28bcc4e-a83a-4009-8ade-8e539c86f78a.mock.pstmn.io/api/login",
+      url: `${BASE_API}api/user/register`,
+      headers: {
+        "content-type": "application/json;charset=UTF-8",
+        accept: "application/json,",
+        "Access-Control-Allow-Origin": "*",
+      },
       data: {
-        id: id,
-        pwd: pwd,
+        password: pwd,
+        passwordCheck: pwd_check,
+        nickname: user_name,
+        username: id,
       },
     })
       .then((res) => {
         console.log(res);
-        const user_info = {
-          id: res.data.id,
-          uid: res.data.uid,
-          user_name: res.data.user_name,
-          profile_src: res.data.user_profile_src,
-        };
-        const mytoken = res.data.token;
+        window.alert("회원가입 성공!");
+        history.replace("/login");
+      })
+      .catch((err) => {
+        console.log(err.response);
+      });
+  };
+};
+const loginAxios = (id, pwd) => {
+  return function (dispatch, getState, { history }) {
+    console.log("hello loginAxios");
+
+    axios({
+      method: "post",
+      url: `${BASE_API}api/user/login`,
+      data: {
+        username: id,
+        password: pwd,
+      },
+    })
+      .then((res) => {
+        console.log("my res -> ", res);
+        const mytoken = res.headers.authorization;
         setCookie("is_login", mytoken);
-        dispatch(setUser(user_info));
-        history.push("/");
+        axios({
+          method: "GET",
+          url: `${BASE_API}api/user/info`,
+          headers: { authorization: mytoken },
+          params: {
+            username: id,
+          },
+        })
+          .then((res) => {
+            const user_info = {
+              user_id: res.data.username,
+              user_nick: res.data.nickname,
+            };
+            const user = JSON.stringify(user_info);
+            setCookie("is_user", user);
+            dispatch(setUser(user_info));
+            history.push("/");
+          })
+          .catch((error) => {
+            //401,403
+            console.log(error.response);
+            console.log(error.code, error.message);
+          });
       })
       .catch((error) => {
         //401,403
@@ -55,36 +101,20 @@ const loginAxios = (id, pwd) => {
 const loginCheckAxios = () => {
   return function (dispatch, getState, { history }) {
     console.log("hello loginCheckAxios");
-    const mycookie = getCookie("is_login");
-    let is_login = false;
-    if (mycookie === undefined) {
-    } else {
-      is_login = true;
-    }
-    if (is_login) {
-      axios({
-        method: "post",
-        url: "https://e28bcc4e-a83a-4009-8ade-8e539c86f78a.mock.pstmn.io/api/user/check",
-        headers: {
-          JWTtoken: mycookie,
-        },
-      })
-        .then((res) => {
-          console.log("로그인 체크 성공!");
-          const user_info = {
-            id: res.data.id,
-            uid: res.data.uid,
-            user_name: res.data.user_name,
-            profile_src: res.data.profile_image_src,
-          };
+    const mycookie = getCookie("is_user");
 
-          dispatch(setUser(user_info));
-        })
-        .catch((error) => {
-          console.log(error.code, error.message);
-        });
+    if (mycookie === undefined) {
+      console.log("cookie null!!!!");
+      history.replace("/");
     } else {
-      console.log("is login else!");
+      console.log("cookie is not null!!!!");
+      const user = JSON.parse(mycookie);
+      console.log(user);
+      const user_info = {
+        user_id: user.user_id,
+        user_nick: user.user_nick,
+      };
+      dispatch(setUser(user_info));
     }
   };
 };
@@ -108,6 +138,7 @@ export default handleActions(
     [LOG_OUT]: (state, action) =>
       produce(state, (draft) => {
         delCookie("is_login");
+        delCookie("is_user");
         draft.user = null;
         draft.is_login = false;
       }),
@@ -121,6 +152,7 @@ const actionCreators = {
   loginAxios,
   loginCheckAxios,
   logoutAxios,
+  signupAxios,
 };
 
 export { actionCreators };

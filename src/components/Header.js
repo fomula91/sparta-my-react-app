@@ -30,7 +30,7 @@ const Header = (props) => {
             <Button
               text="알림"
               _onClick={() => {
-                // history.push("/noti");
+                history.push("/notificate");
               }}
             />
             <Button

@@ -1,11 +1,18 @@
 import React from "react";
-import { BrowserRouter, Route } from "react-router-dom";
+import { Route } from "react-router-dom";
 import { ConnectedRouter } from "connected-react-router";
 import { history } from "./redux/configureStore";
-import PostList from "./pages/PostList";
+
 import Header from "./components/Header";
-import { Login, PostWrite } from "./pages/index";
 import Permit from "./main/Permit";
+import {
+  Login,
+  PostWrite,
+  PostList,
+  Notification,
+  PostDetail,
+  Signup,
+} from "./pages/index";
 import { Button } from "./elements/index";
 function App() {
   return (
@@ -14,7 +21,10 @@ function App() {
         <Header></Header>
         <Route path="/" exact component={PostList} />
         <Route path="/login" component={Login} />
+        <Route path="/signup" component={Signup} />
         <Route path="/write" component={PostWrite} />
+        <Route path="/notificate" component={Notification} />
+        <Route path="/post/:id" component={PostDetail} />
         <Permit>
           <Button
             is_float
