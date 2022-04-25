@@ -5,6 +5,7 @@ import moment from "moment";
 import { actionCreators as imageActions } from "./image";
 
 import axios from "axios";
+import * as Agent from "agentkeepalive";
 import { setCookie, getCookie, delCookie } from "../../main/Cookie";
 
 import { storage } from "../../main/Storage";
@@ -14,7 +15,16 @@ const ADD_POST = "ADD_POST";
 const EDIT_POST = "EDIT_POST";
 const LOADING = "LOADING";
 
+axios.defaults.baseURL = "http://15.164.222.215/";
 const BASE_API = process.env.REACT_APP_API_BASE_URL;
+// const instance = axios.create({
+//   baseURL: process.env.REACT_APP_API_BASE_URL,
+//   headers: {
+//     "content-type": "application/json;charset=UTF-8",
+//     accept: "application/json,",
+//     "Access-Control-Allow-Origin": "*",
+//   },
+// });
 
 //action
 const setPost = createAction(SET_POST, (post_list) => ({
@@ -123,15 +133,17 @@ const addPostAxios = (contents = "") => {
 
 const getPostAxios = () => {
   return function (dispatch, getState, { history }) {
-    console.log("hello getPostAxios");
+    console.log("hello getPostAxios!!!!!!");
+
     axios
-      .get(`${BASE_API}api/post`)
+      .get(`https://15.164.222.215/api/post`)
       .then((res) => {
         const _post = [...res.data];
 
         dispatch(setPost(_post));
       })
       .catch((error) => {
+        console.log(error.response);
         console.log(error.code, error.message);
       });
   };

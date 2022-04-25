@@ -4,6 +4,7 @@ src/.DS_Store
 node_modules
 config/.env
 .env
+build
 build/asset-manifest.json
 build/favicon.ico
 build/index.html
