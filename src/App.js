@@ -1,41 +1,22 @@
+import "./App.css";
 import React from "react";
-import { Route } from "react-router-dom";
-import { ConnectedRouter } from "connected-react-router";
-import { history } from "./redux/configureStore";
 
-import Header from "./components/Header";
-import Permit from "./main/Permit";
-import {
-  Login,
-  PostWrite,
-  PostList,
-  Notification,
-  PostDetail,
-  Signup,
-} from "./pages/index";
-import { Button } from "./elements/index";
+import PostList from "./PAGE/PostList";
+import Login from "./PAGE/Login";
+import Register from "./PAGE/Register";
+import Post from "./PAGE/Post";
+import { BrowserRouter, Route } from "react-router-dom";
+
 function App() {
   return (
-    <>
-      <ConnectedRouter history={history}>
-        <Header></Header>
-        <Route path="/" exact component={PostList} />
-        <Route path="/login" component={Login} />
-        <Route path="/signup" component={Signup} />
-        <Route path="/write" component={PostWrite} />
-        <Route path="/notificate" component={Notification} />
-        <Route path="/post/:id" component={PostDetail} />
-        <Permit>
-          <Button
-            is_float
-            text="+"
-            _onClick={() => {
-              history.push("/write");
-            }}
-          ></Button>
-        </Permit>
-      </ConnectedRouter>
-    </>
+    <div className="App">
+      <BrowserRouter>
+        <Route path="/" exact component={PostList}></Route>
+        <Route path="/login" exact component={Login}></Route>
+        <Route path="/register" exact component={Register}></Route>
+        <Route path="/post" exact component={Post}></Route>
+      </BrowserRouter>
+    </div>
   );
 }
 
