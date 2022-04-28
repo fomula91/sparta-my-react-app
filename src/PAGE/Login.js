@@ -1,32 +1,35 @@
-import React from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
+import { useSelector, useDispatch } from "react-redux";
+import { actionCreators as userAction } from "../redux/modules/user";
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const id = useRef("");
+  const pass = useRef("");
+
+  const login = () => {
+    if (id.current.value === "" || pass.current.value === "") {
+      window.alert("아이디, 비밀번호 입력해주세요!");
+      return;
+    }
+    dispatch(userAction.loginUserAxios(id.current.value, pass.current.value));
+  };
   return (
     <>
       <DIV>
-        <HEADER>
-          <HEADER>header</HEADER>
-          <HEADER>
-            <BTN>로그인</BTN>
-            <BTN>회원가입</BTN>
-            <BTN>로그아웃</BTN>
-            <BTN>내정보</BTN>
-            <BTN>알림</BTN>
-          </HEADER>
-        </HEADER>
         <DIV>
           hello world
           <DIV>
             <TEXTDIV>아이디</TEXTDIV>
-            <INPUT placeholder="id"></INPUT>
+            <INPUT ref={id} placeholder="id"></INPUT>
           </DIV>
           <DIV>
             <TEXTDIV>비밀번호</TEXTDIV>
-            <INPUT placeholder="password"></INPUT>
+            <INPUT ref={pass} type="password" placeholder="password"></INPUT>
           </DIV>
           <DIV>
-            <LOGINBTN>로그인하기</LOGINBTN>
+            <LOGINBTN onClick={login}>로그인하기</LOGINBTN>
           </DIV>
         </DIV>
       </DIV>
@@ -45,16 +48,6 @@ const TEXTDIV = styled(DIV)`
   border: none;
 `;
 
-const HEADER = styled.div`
-  display: flex;
-  //flex-wrap으로 해당 컴포넌트 밖으로 삐져나가지 않게 설정
-  flex-wrap: wrap;
-  border: 2px solid yellowgreen;
-  //justify-content로 엘리먼트간 간격을 벌림
-  justify-content: space-between;
-  align-items: center;
-`;
-
 const BTN = styled.div`
   border: 2px solid red;
   width: 100px;
@@ -65,6 +58,15 @@ const BTN = styled.div`
 const LOGINBTN = styled(BTN)`
   width: 100%;
   margin: 0;
+  outline: none;
+  border: none;
+  background: green;
+  color: white;
+  text-align: center;
+  :hover {
+    background: black;
+    color: white;
+  }
 `;
 const INPUT = styled.input`
   width: 100%;
